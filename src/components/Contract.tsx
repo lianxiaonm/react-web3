@@ -54,13 +54,13 @@ export default function Contract({ address }: Props) {
           className="p-2 bg-gray-200 rounded disabled:opacity-50"
           disabled={deployPending}
           onClick={handlerDeploy}
-          children="Deployed"
+          children="Deployed Contract"
         />
         <button
           className="p-2 bg-blue-500 text-white rounded disabled:opacity-50"
           disabled={writePending}
           onClick={handleWrite}
-          children="Transfer"
+          children="Write Contract"
         />
       </div>
     </div>

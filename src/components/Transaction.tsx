@@ -35,7 +35,7 @@ export default function Transaction() {
             value: parseEther(`${number}`),
           })
         }
-        children="SendTra"
+        children="Pay Ether"
       />
     </div>
   );
