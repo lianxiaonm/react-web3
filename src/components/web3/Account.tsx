@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import cls from "classnames";
+import { Button } from "antd";
 import {
   useConnect,
   useDisconnect,
@@ -7,24 +6,19 @@ import {
   useSwitchChain,
   useEnsName,
   useBalance,
+  useAccount,
 } from "wagmi";
 
-type AccountProps = {
-  connector?: any;
-  isConnected: boolean;
-  address: `0x${string}`;
-};
-
-const Account = ({ connector, isConnected, address }: AccountProps) => {
+const Account = () => {
+  const { connector, isConnected, address } = useAccount();
   const { connectors, connect } = useConnect();
   const { disconnect } = useDisconnect();
   const _chainId = useChainId();
   const { chains, switchChainAsync } = useSwitchChain();
   const chainId = _chainId || chains[0]?.id;
-  const { data: ensName } = useEnsName({ address });
   const { data: balance } = useBalance({ address });
 
-  console.log("balance", balance, chainId, ensName);
+  console.log("balance", balance, chainId);
 
   return isConnected ? (
     <div className="flex gap-1 items-center">
@@ -34,8 +28,8 @@ const Account = ({ connector, isConnected, address }: AccountProps) => {
           {[balance?.value || `0.00`, balance?.symbol || "ETH"].join(" ")}
         </div>
       </div>
-      <button
-        className="border rounded-md px-[12px] py-[6px]"
+      <Button
+        type="default"
         onClick={() => disconnect()}
         children="Disconnect"
       />
@@ -46,14 +40,9 @@ const Account = ({ connector, isConnected, address }: AccountProps) => {
         Choose Chains:
         <div className="flex gap-1 mt-1">
           {chains.map((c: any) => (
-            <button
+            <Button
               key={c.id}
-              className={cls(
-                `border rounded-md px-[8px] py-[4px] text-[14px]`,
-                {
-                  "bg-blue-500 text-white": chainId === c.id,
-                }
-              )}
+              type={chainId === c.id ? "primary" : "default"}
               onClick={() => switchChainAsync({ chainId: c.id })}
               children={c?.name}
             />
@@ -61,9 +50,9 @@ const Account = ({ connector, isConnected, address }: AccountProps) => {
         </div>
       </div>
       {connectors.map((c: any) => (
-        <button
+        <Button
           key={c.id}
-          className="border rounded-md px-[12px] py-[6px]"
+          type="default"
           onClick={() => connect({ connector: c, chainId })}
           children={c.name}
         />

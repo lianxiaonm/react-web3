@@ -1,5 +1,6 @@
+import { Button, Input } from "antd";
 import { useMemo, useState } from "react";
-import { useSignMessage, useVerifyMessage } from "wagmi";
+import { useSignMessage } from "wagmi";
 
 export default function SignMessage() {
   const [message, setMessage] = useState("Hello world");
@@ -20,13 +21,13 @@ export default function SignMessage() {
   return (
     <div>
       <div className="flex gap-[12px]">
-        <input
-          className="w-auto flex-1 border-none bg-gray-200 p-1 rounded-md"
+        <Input
+          className="w-auto flex-1"
           defaultValue={message}
           onInput={onInput}
         />
-        <button
-          className="px-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        <Button
+          type="primary"
           disabled={isPending}
           onClick={() => signMessage({ message })}
           children="Sign"

@@ -7,14 +7,14 @@ const bigList = Array.from({ length: 50000 }, (_, i) =>
   `${i}`.padStart(9, "X")
 );
 
+type Type = "" | "xhr" | "xhr-upload" | "fetch" | "fetch-max";
+
 export default function HttpPage() {
   const [messageApi, contextHolder] = message.useMessage();
   const [result, setResult] = useState("");
   const [progress, setProgress] = useState(0);
   const [retryCount, setRetryCount] = useState(0);
-  const [type, setType] = useState<
-    "" | "xhr" | "xhr-upload" | "fetch" | "fetch-max"
-  >("");
+  const [type, setType] = useState<Type>("");
 
   const reset = useCallback((err?: any) => {
     setType("");
@@ -78,10 +78,10 @@ export default function HttpPage() {
   return (
     <div className="section p-[12px] gap-[12px]">
       {contextHolder}
-      <Button type="primary" onClick={handleXhr} disabled={!!type}>
+      <Button type="primary" onClick={handleXhr}>
         XHR progress
       </Button>
-      <Button type="default" onClick={handleFetch} disabled={!!type}>
+      <Button type="default" onClick={handleFetch}>
         Fetch progress
       </Button>
       <Button type="default" onClick={handleFetchMaxRetry}>

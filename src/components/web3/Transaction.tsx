@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Button, Input } from "antd";
 import { useSendTransaction } from "wagmi";
 import { parseEther } from "viem";
 
@@ -20,14 +21,14 @@ export default function Transaction() {
 
   return (
     <div className="flex gap-[12px]">
-      <input
+      <Input
         type="number"
-        className="w-auto flex-1 border-none bg-gray-200 p-1 rounded-md"
+        className="w-auto flex-1"
         defaultValue={number}
         onInput={onInput}
       />
-      <button
-        className="px-2 bg-blue-500 text-white rounded disabled:opacity-50"
+      <Button
+        type="primary"
         disabled={isPending}
         onClick={() =>
           sendTransaction({

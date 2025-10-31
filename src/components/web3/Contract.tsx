@@ -1,11 +1,12 @@
-import { useDeployContract, useReadContract, useWriteContract } from "wagmi";
+import { Button } from "antd";
+import {
+  useDeployContract,
+  useReadContract,
+  useWriteContract,
+} from "wagmi";
 import { balanceAbi, approveAbi } from "@/abi";
 
-type Props = {
-  address: `0x${string}`;
-};
-
-export default function Contract({ address }: Props) {
+export default function Contract() {
   const { data } = useReadContract({
     abi: balanceAbi,
     address: "0x6b175474e89094c44da98b954eedeac495271d0f",
@@ -50,14 +51,14 @@ export default function Contract({ address }: Props) {
     <div>
       <div className="mb-[8px]">Read Contract: {data?.toString() || "0"}</div>
       <div className="flex items-center justify-between text-[14px]">
-        <button
-          className="p-2 bg-gray-200 rounded disabled:opacity-50"
+        <Button
+          type="default"
           disabled={deployPending}
           onClick={handlerDeploy}
           children="Deployed Contract"
         />
-        <button
-          className="p-2 bg-blue-500 text-white rounded disabled:opacity-50"
+        <Button
+          type="primary"
           disabled={writePending}
           onClick={handleWrite}
           children="Write Contract"
