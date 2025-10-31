@@ -1,19 +1,8 @@
-import { Fragment, useMemo, useRef, useState } from "react";
+import { useRef, ReactNode, useMemo } from "react";
 import { throttle } from "lodash-es";
-import Search from "@/components/Search";
-import Segmented from "@/components/Segmented";
-import XScroll from "@/components/XScroll";
 
-export default function Market() {
+export default function XScroll({ children }: { children: ReactNode }) {
   const barRef = useRef<any>(null);
-  const memeList = "1".repeat(10).split("");
-  const [tab, setTab] = useState("hot");
-
-  const tabs = [
-    { label: "自选", key: "my" },
-    { label: "热门", key: "hot" },
-    { label: "最新", key: "new" },
-  ];
 
   const scrollX = useMemo(() => {
     return throttle((event) => {
@@ -35,17 +24,15 @@ export default function Market() {
   }, []);
 
   return (
-    <Fragment>
-      <Search placeholder="代币名称或合约地址" />
-      <XScroll>
-        {memeList.map((meme, index) => (
-          <div
-            key={index}
-            className="border rounded-xl p-[6px] w-[80px] h-[80px] flex-none"
-          />
-        ))}
-      </XScroll>
-      <Segmented options={tabs} value={tab} onChange={setTab} />
-    </Fragment>
+    <div className="flex flex-col items-center gap-[12px]">
+      <div
+        onScroll={scrollX}
+        className="no-scroll flex gap-[16px] overflow-auto w-full"
+        children={children}
+      />
+      <div className="w-[50px] h-[4px] rounded-full bg-gray-400" ref={barRef}>
+        <div className="h-full w-[14px] bg-black rounded-full" />
+      </div>
+    </div>
   );
 }

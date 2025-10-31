@@ -1,7 +1,16 @@
 .section {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    max-width: 440px;
-    margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.no-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  
+  &::-webkit-scrollbar {
+    width: 0;
+  }
 }
