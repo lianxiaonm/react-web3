@@ -7,21 +7,28 @@ const ErrorEnum = {
   19: "HTTP 错误",
 };
 
+type AdapterParams = { cancel: () => void };
+
 type XHROptions = {
   method?: string;
   params?: Record<string, any>;
+  formData?: FormData;
+  adapter?: (params: AdapterParams) => void;
   onUploadProgress?: (percent: number) => void;
   onProgress?: (percent: number) => void;
 };
 export const xhrRequest = async (url: string, options?: XHROptions) => {
-  const {
-    method = "GET",
-    params,
-    onProgress,
-    onUploadProgress,
-  } = options || {};
   return new Promise<Record<string, any>>((resolve, reject) => {
+    const {
+      method = "GET",
+      params,
+      formData,
+      adapter,
+      onProgress,
+      onUploadProgress,
+    } = options || {};
     const xhr = new XMLHttpRequest();
+    adapter && adapter({ cancel: () => xhr.abort() });
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
         try {
@@ -46,15 +53,21 @@ export const xhrRequest = async (url: string, options?: XHROptions) => {
         onUploadProgress(Math.round((event.loaded / event.total) * 100));
       });
     }
-    xhr.open(method, url, true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xhr.send(params ? JSON.stringify(params) : null);
+    if (formData instanceof FormData) {
+      xhr.open("POST", url, true);
+      xhr.send(formData);
+    } else {
+      xhr.open(method, url, true);
+      xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      xhr.send(params ? JSON.stringify(params) : null);
+    }
   });
 };
 
 type FetchOptions = {
   method?: string;
   body?: Record<string, any>;
+  adapter?: (params: AdapterParams) => void;
   onProgress?: (percent: number) => void;
   maxCount?: number;
   onRetry?: (count: number) => void;
@@ -66,13 +79,17 @@ export const fetchRequest = async (
   const {
     method = "GET",
     body,
+    adapter,
     onProgress,
     onRetry,
     maxCount = 0,
   } = options || {};
   try {
+    const controller = new AbortController();
+    adapter && adapter({ cancel: () => controller.abort() });
     const response = await fetch(url, {
       method,
+      signal: controller.signal,
       body: body ? JSON.stringify(body) : null,
     });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

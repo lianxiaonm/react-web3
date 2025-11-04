@@ -29,6 +29,9 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
+      spark-md5:
+        specifier: ^3.0.2
+        version: 3.0.2
       umi:
         specifier: ^4.5.0
         version: 4.5.0(@babel/core@7.28.4)(@types/node@24.5.2)(@types/react@18.3.24)(@types/webpack@5.28.5)(@utoo/pack@0.0.1-alpha.47(@types/webpack@5.28.5)(bufferutil@4.0.9)(utf-8-validate@5.0.10)(webpack@5.101.3))(eslint@8.57.1)(lightningcss@1.22.1)(prettier@3.6.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@3.29.5)(sass@1.54.0)(stylelint@14.16.1)(terser@5.44.0)(type-fest@0.20.2)(typescript@5.9.2)(webpack@5.101.3)
@@ -48,6 +51,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.0.11
         version: 18.3.7(@types/react@18.3.24)
+      '@types/spark-md5':
+        specifier: ^3.0.5
+        version: 3.0.5
       '@umijs/plugins':
         specifier: ^4.5.3
         version: 4.5.3(@babel/core@7.28.4)(@types/react-dom@18.3.7(@types/react@18.3.24))(@types/react@18.3.24)(antd@5.27.6(date-fns@2.30.0)(moment@2.30.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(dva@2.5.0-beta.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(rc-field-form@2.7.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1628,6 +1634,9 @@ packages:
 
   '@types/semver@7.7.1':
     resolution: {integrity: sha512-FmgJfu+MOcQ370SD0ev7EI8TlCAfKYU+B4m5T3yXc1CiRN94g/SZPtsCkk506aUDtlMnFZvasDwHHUcZUEaYuA==}
+
+  '@types/spark-md5@3.0.5':
+    resolution: {integrity: sha512-lWf05dnD42DLVKQJZrDHtWFidcLrHuip01CtnC2/S6AMhX4t9ZlEUj4iuRlAnts0PQk7KESOqKxeGE/b6sIPGg==, tarball: https://registry.npmjs.org/@types/spark-md5/-/spark-md5-3.0.5.tgz}
 
   '@types/stylis@4.2.7':
     resolution: {integrity: sha512-VgDNokpBoKF+wrdvhAAfS55OMQpL6QRglwTwNC3kIgBrzZxA4WsFj+2eLfEA/uMUDzBcEhYmjSbwQakn/i3ajA==, tarball: https://registry.npmjs.org/@types/stylis/-/stylis-4.2.7.tgz}
@@ -6173,6 +6182,9 @@ packages:
     resolution: {integrity: sha512-i5uvt8C3ikiWeNZSVZNWcfZPItFQOsYTUAOkcUPGd8DqDy1uOUikjt5dG+uRlwyvR108Fb9DOd4GvXfT0N2/uQ==}
     engines: {node: '>= 12'}
 
+  spark-md5@3.0.2:
+    resolution: {integrity: sha512-wcFzz9cDfbuqe0FZzfi2or1sgyIrsDwmPwfZC4hiNidPdPINjeUwNfv5kldczoEAcjl9Y1L3SM7Uz2PUEQzxQw==, tarball: https://registry.npmjs.org/spark-md5/-/spark-md5-3.0.2.tgz}
+
   spdx-correct@3.2.0:
     resolution: {integrity: sha512-kN9dJbvnySHULIluDHy32WHRUu3Og7B9sbY7tsFLctQkIqnMh3hErYgdMjTYuqmcXX+lK5T1lnUt3G7zNswmZA==, tarball: https://registry.npmjs.org/spdx-correct/-/spdx-correct-3.2.0.tgz}
 
@@ -9175,6 +9187,8 @@ snapshots:
   '@types/resolve@1.20.6': {}
 
   '@types/semver@7.7.1': {}
+
+  '@types/spark-md5@3.0.5': {}
 
   '@types/stylis@4.2.7': {}
 
@@ -15199,6 +15213,8 @@ snapshots:
   source-map@0.6.1: {}
 
   source-map@0.7.6: {}
+
+  spark-md5@3.0.2: {}
 
   spdx-correct@3.2.0:
     dependencies:

@@ -15,6 +15,7 @@ export default defineConfig({
         { path: "/web3/assets", component: "web3/assets" }, //
       ],
     },
+    { path: "/file", component: "files" },
     { path: "/*", component: "404" },
   ],
 
