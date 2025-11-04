@@ -1,9 +1,14 @@
 import { useEffect, useMemo } from "react";
 import { useAccount, useReconnect } from "wagmi";
+import {
+  UploadOutlined,
+  DownloadOutlined,
+  HistoryOutlined,
+  AuditOutlined,
+} from "@ant-design/icons";
 
 import Entrance from "@/components/Entrance";
 import Account from "@/components/web3/Account";
-
 
 export default function Web3Page() {
   const { reconnect } = useReconnect();
@@ -14,11 +19,12 @@ export default function Web3Page() {
 
   const entraces = useMemo(() => {
     return [
-      { text: "发送", key: "send" },
-      { text: "接受", key: "revicer" },
-      { text: "历史记录", key: "history" },
-      { text: "授权", key: "auth" },
+      { text: "发送", key: "send", icon: UploadOutlined },
+      { text: "接受", key: "revicer", icon: DownloadOutlined },
+      { text: "历史记录", key: "history", icon: HistoryOutlined },
+      { text: "授权", key: "auth", icon: AuditOutlined },
     ].map((item) => ({
+      icon: item.icon,
       text: item.text,
       onClick: () => {},
     }));

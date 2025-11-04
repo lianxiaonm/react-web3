@@ -1,10 +1,10 @@
-import { Button } from "antd";
+import { useCallback } from "react";
+import { Button, message, Segmented } from "antd";
+import { DisconnectOutlined, CopyOutlined } from "@ant-design/icons";
 import {
   useConnect,
-  useDisconnect,
   useChainId,
   useSwitchChain,
-  useEnsName,
   useBalance,
   useAccount,
 } from "wagmi";
@@ -12,51 +12,62 @@ import {
 const Account = () => {
   const { connector, isConnected, address } = useAccount();
   const { connectors, connect } = useConnect();
-  const { disconnect } = useDisconnect();
   const _chainId = useChainId();
   const { chains, switchChainAsync } = useSwitchChain();
   const chainId = _chainId || chains[0]?.id;
   const { data: balance } = useBalance({ address });
 
+  const copyAddress = useCallback(() => {
+    try {
+      navigator.clipboard.writeText(address);
+      message.success("copy success");
+    } catch (error: any) {
+      message.error(`copy error: ${error.message}`);
+    }
+  }, [address]);
+
   console.log("balance", balance, chainId);
 
-  return isConnected ? (
-    <div className="flex gap-1 items-center">
-      <div className="flex-1 items-center">
-        <div className="font-bold">{connector?.name}</div>
-        <div>
-          {[balance?.value || `0.00`, balance?.symbol || "ETH"].join(" ")}
-        </div>
-      </div>
-      <Button
-        type="default"
-        onClick={() => disconnect()}
-        children="Disconnect"
+  return (
+    <div className="flex flex-col gap-2">
+      <Segmented
+        block
+        value={chainId}
+        options={chains.map((c: any) => ({ value: c.id, label: c.name }))}
+        onChange={(value) => switchChainAsync({ chainId: value })}
       />
-    </div>
-  ) : (
-    <div className="flex gap-2 items-center">
-      <div className="flex-1">
-        Choose Chains:
-        <div className="flex gap-1 mt-1">
-          {chains.map((c: any) => (
+      {isConnected ? (
+        <div className="flex gap-1 items-center">
+          <div className="items-center mr-auto">
+            <div className="flex gap-2 items-end">
+              <span className="font-bold">{connector?.name}</span>
+              <span className="text-[14px]">
+                {address.replace(/^(.{4}).*(.{4})$/, "$1...$2")}
+              </span>
+            </div>
+            <div>
+              {[balance?.value || `0.00`, balance?.symbol || "ETH"].join(" ")}
+            </div>
+          </div>
+          <Button icon={<CopyOutlined />} onClick={copyAddress} />
+          <Button
+            icon={<DisconnectOutlined />}
+            onClick={() => connector?.disconnect()}
+          />
+        </div>
+      ) : (
+        <div className="flex gap-2 items-center">
+          Connect Wallet:
+          {connectors.map((c: any, index: number) => (
             <Button
               key={c.id}
-              type={chainId === c.id ? "primary" : "default"}
-              onClick={() => switchChainAsync({ chainId: c.id })}
-              children={c?.name}
+              className={index ? "" : "ml-auto"}
+              onClick={() => connect({ connector: c, chainId })}
+              children={c.name}
             />
           ))}
         </div>
-      </div>
-      {connectors.map((c: any) => (
-        <Button
-          key={c.id}
-          type="default"
-          onClick={() => connect({ connector: c, chainId })}
-          children={c.name}
-        />
-      ))}
+      )}
     </div>
   );
 };

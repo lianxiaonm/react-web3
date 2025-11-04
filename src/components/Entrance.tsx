@@ -1,3 +1,5 @@
+import { createElement } from "react";
+
 type Props = {
   entraces: {
     icon?: string;
@@ -15,7 +17,14 @@ export default function Entrance({ entraces }: Props) {
           onClick={item.onClick}
           className="flex-1 flex flex-col gap-[6px]"
         >
-          <div className="w-[44px] h-[44px] rounded-[12px] bg-gray-200 mx-auto" />
+          <div
+            className="w-[44px] h-[44px] rounded-[12px] bg-gray-200 mx-auto inline-flex items-center justify-center"
+            children={
+              item.icon
+                ? createElement(item.icon, { className: "text-[20px]" })
+                : null
+            }
+          />
           <div className="text-center text-gray-700">{item.text}</div>
         </a>
       ))}
