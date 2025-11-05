@@ -28,7 +28,6 @@ export const xhrRequest = async (url: string, options?: XHROptions) => {
       onUploadProgress,
     } = options || {};
     const xhr = new XMLHttpRequest();
-    adapter && adapter({ cancel: () => xhr.abort() });
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
         try {
@@ -55,9 +54,11 @@ export const xhrRequest = async (url: string, options?: XHROptions) => {
     }
     if (formData instanceof FormData) {
       xhr.open("POST", url, true);
+      adapter && adapter({ cancel: () => xhr.abort() });
       xhr.send(formData);
     } else {
       xhr.open(method, url, true);
+      adapter && adapter({ cancel: () => xhr.abort() });
       xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
       xhr.send(params ? JSON.stringify(params) : null);
     }

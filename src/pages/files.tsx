@@ -9,14 +9,14 @@ const fileAccept = [".png", ".svg", ".jpg", ".jpeg", ".webp"];
 
 type State = {
   percent?: number;
-  state: "init" | "upload" | "success" | "fail";
+  uplpadState: "init" | "upload" | "success" | "fail";
   cancel?: () => void;
-  file: File;
 };
 //
 export default function FilesPage() {
   const fileRef = useRef<any>(null);
-  const [files, setFiles] = useState<State[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
+  const [uploadState, setUploadState] = useState<Record<string, State>>({});
 
   const loadFile = useCallback(() => {
     if (fileRef.current) {
@@ -40,95 +40,73 @@ export default function FilesPage() {
 
   const fileChange = useCallback(async (evt: any) => {
     setFiles(
-      [...evt.target.files]
-        .filter((item) => {
-          const [suffix] = item.name.split(".").slice(-1);
-          return fileAccept.indexOf(`.${suffix}`) > -1;
-        })
-        .map((file) => ({ percent: 0, file, state: "init" }))
+      [...evt.target.files].filter((item) => {
+        const [suffix] = item.name.split(".").slice(-1);
+        return fileAccept.indexOf(`.${suffix}`) > -1;
+      })
     );
   }, []);
 
   const onUpload = useCallback(async () => {
-    let temp: Record<string, any> = {};
-    console.log("onUpload", files);
-    const chunks = await chunkFiles(files.map((item) => item.file));
+    const chunks = await chunkFiles(files);
     console.log("upload chunks", chunks);
-    // async temp to state
-    const asyncState = throttle(() => {
-      setFiles((pres) => {
-        return pres.map((item) => {
-          const {
-            count,
-            adapters = [],
-            percents = [],
-            states = [],
-          } = temp[item.file.name] || {};
-          let state: any = "init";
-          let percent = (percents as number[]).reduce(
-            (res, curr) => res + Math.round(curr / count),
-            0
-          );
-          if ((states as boolean[]).indexOf(false) > -1) {
-            state = "fail";
-          } else if (percent === 100) {
-            state = "success";
-          } else if (percent === 0) {
-            state = "init";
-          } else {
-            state = "upload";
-          }
-          return {
-            file: item.file,
-            state,
-            percent,
-            cancel: () => {
-              (adapters as []).forEach((xhr: any) => xhr.cancel());
-            },
-          };
-        });
-      });
-      //
-    }, 100);
 
-    chunks.map((chunk) => {
-      const { name, index } = chunk;
-      const formData = new FormData();
-      formData.append("name", `${name}`);
-      formData.append("index", `${index}`);
-      formData.append("file", chunk.blob);
+    files.map(async (file) => {
+      const { webkitRelativePath } = file;
+      const miniChunks = chunks.filter((chunk) =>
+        webkitRelativePath
+          ? webkitRelativePath === chunk.name
+          : chunk.name === file.name
+      );
+      let uplpadState: State["uplpadState"] = "upload";
+      let adapters: any[] = [];
+      const percents: number[] = [];
+      const cancel = () => adapters.map((adapter) => adapter?.cancel());
 
-      temp[name] = temp[name] || { count: 0 };
-      temp[name].count += 1;
+      const asyncState = throttle(() => {
+        const key = webkitRelativePath || file.name;
+        const percent = Math.round(
+          percents.reduce((res, curr) => res + curr, 0) / miniChunks.length
+        );
+        setUploadState((preState) => ({
+          ...preState,
+          [key]: { percent, uplpadState, cancel },
+        }));
+      }, 50);
 
-      return xhrRequest("https://httpbin.org/post", {
-        formData,
-        adapter: (adapterParams) => {
-          temp[name].adapters = temp[name].adapters || [];
-          temp[name].adapters.push(adapterParams);
-          asyncState();
-        },
-        onUploadProgress: (percent) => {
-          temp[name].percents = temp[name].percents || [];
-          temp[name].percents.push(percent);
-          asyncState();
-        },
-      })
-        .then(() => {
-          temp[name].states = temp[name].states || [];
-          temp[name].states.push(true);
-          asyncState();
-        })
-        .catch(() => {
-          temp[name].states = temp[name].states || [];
-          temp[name].states.push(false);
-          asyncState();
-        });
+      try {
+        await Promise.all(
+          miniChunks.map((miniChunk) => {
+            const { name, index } = miniChunk;
+            const formData = new FormData();
+            formData.append("name", `${name}`);
+            formData.append("index", `${index}`);
+            formData.append("file", miniChunk.blob);
+            return xhrRequest("https://httpbin.org/post", {
+              formData,
+              adapter(adapterParam) {
+                adapters[index] = adapterParam;
+                asyncState();
+              },
+              onUploadProgress(percent) {
+                percents[index] = percent;
+                asyncState();
+              },
+            });
+          })
+        );
+        uplpadState = "success";
+      } catch (error) {
+        uplpadState = "fail";
+      } finally {
+        adapters = [];
+        asyncState();
+      }
     });
-    console.log("onUpload chunks", chunks);
   }, [files]);
 
-  const delImage = useCallback((index: number) => {
+  const delImage = useCallback((index: number, cancel: State["cancel"]) => {
+    typeof cancel === "function" && cancel();
     setFiles((pres) => pres.filter((_, i) => index !== i));
   }, []);
 
@@ -143,7 +121,7 @@ export default function FilesPage() {
     return `${size}B`;
   }, []);
 
-  const allSize = files.reduce((res, item) => res + item.file.size, 0);
+  const allSize = files.reduce((res, item) => res + item.size, 0);
 
   return (
     <div className="section p-[12px] gap-[12px]">
@@ -165,36 +143,40 @@ export default function FilesPage() {
         children={`upload files (${files.length}) (${transfer(allSize)})`}
       />
       <div className="flex flex-col">
-        {files.map(({ file, percent, state }, index) => (
-          <div
-            className="flex flex-col gap-1 border-b py-[12px] first-of-type:pt-0 last-of-type:border-none last-of-type:pb-0"
-            key={file.webkitRelativePath || file.name}
-          >
-            <div className="flex items-center">
-              <Progress
-                percent={percent}
-                className="w-[50%] mr-auto"
-                status={state === "fail" ? "exception" : undefined}
-              />
-              <Button
-                icon={<DeleteOutlined />}
-                onClick={() => delImage(index)}
-              />
+        {files.map((file, index) => {
+          const fileName = file.webkitRelativePath || file.name;
+          const { percent, uplpadState, cancel } = uploadState[fileName] || {};
+          return (
+            <div
+              key={fileName}
+              className="flex flex-col gap-1 border-b py-[12px] first-of-type:pt-0 last-of-type:border-none last-of-type:pb-0"
+            >
+              <div className="flex items-center">
+                <Progress
+                  percent={percent}
+                  className="w-[50%] mr-auto"
+                  status={uplpadState === "fail" ? "exception" : undefined}
+                />
+                <Button
+                  icon={<DeleteOutlined />}
+                  onClick={() => delImage(index, cancel)}
+                />
+              </div>
+              <div className="flex">
+                <label className="mr-auto" children="name" />
+                <span children={fileName} />
+              </div>
+              <div className="flex">
+                <label className="mr-auto" children="type" />
+                <span children={file.type} />
+              </div>
+              <div className="flex">
+                <label className="mr-auto" children="size" />
+                <span children={transfer(file.size)} />
+              </div>
             </div>
-            <div className="flex">
-              <label className="mr-auto" children="name" />
-              <span children={file.webkitRelativePath || file.name} />
-            </div>
-            <div className="flex">
-              <label className="mr-auto" children="type" />
-              <span children={file.type} />
-            </div>
-            <div className="flex">
-              <label className="mr-auto" children="size" />
-              <span children={transfer(file.size)} />
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-const CHUCK_SIZE = 1024 * 1024 * 2;
+const CHUCK_SIZE = 1024 * 1024 * 5;
 
 type Chunk = { name: string; blob: Blob; hash: string; index: number };
 
@@ -31,14 +31,15 @@ export const chunkFiles = (files: File[]) => {
 
   return new Promise<Chunk[]>((resolve) => {
     works.forEach((workFiles, i) => {
-      const work = new Worker(new URL("../work/chunk.ts", import.meta.url), {
-        type: "module",
-      });
+      const work = new Worker(
+        new URL("../work/chunk.ts", import.meta.url), //
+        { type: "module" }
+      );
       work.postMessage(workFiles);
       work.onmessage = (evt) => {
         result[i] = evt.data;
         work.terminate();
-        if (++count == THREAD_COUNT) {
+        if (++count == works.length) {
           resolve(result.reduce((res, curr) => res.concat(curr), []));
         }
       };
