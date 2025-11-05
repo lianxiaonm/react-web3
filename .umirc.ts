@@ -18,7 +18,11 @@ export default defineConfig({
     { path: "/file", component: "files" },
     { path: "/*", component: "404" },
   ],
-
+  mfsu: {
+    mfName: "mf",
+    strategy: "normal",
+    exclude: [/spark\-md5/],
+  },
   npmClient: "pnpm",
   tailwindcss: {},
   plugins: ["@umijs/plugins/dist/tailwindcss"],

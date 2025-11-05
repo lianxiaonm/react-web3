@@ -1,16 +1,14 @@
-import React from "react";
 import { Link } from "umi";
 import { Button } from "antd";
+import { HomeOutlined } from "@ant-design/icons";
 
-export function NotFoundPage() {
+export default function NotFoundPage() {
   return (
-    <div className="section p-[12px] gap-[12px]">
+    <div className="section px-[12px] pt-[20vh] text-center">
       <div className="text-2xl font-bold">404 - Page Not Found</div>
-      <Button type="text">
-        <Link to="/" className="block">
-          Go to Home
-        </Link>
-      </Button>
+      <Link to="/" className="block mt-[12px]">
+        <Button icon={<HomeOutlined />}>Go to Home</Button>
+      </Link>
     </div>
   );
 }

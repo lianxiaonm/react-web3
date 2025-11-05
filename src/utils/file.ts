@@ -31,10 +31,9 @@ export const chunkFiles = (files: File[]) => {
 
   return new Promise<Chunk[]>((resolve) => {
     works.forEach((workFiles, i) => {
-      const work = new Worker(
-        new URL("../work/chunk.ts", import.meta.url), //
-        { type: "module" }
-      );
+      const work = new Worker(new URL("../work/chunk.ts", import.meta.url), {
+        type: "module",
+      });
       work.postMessage(workFiles);
       work.onmessage = (evt) => {
         result[i] = evt.data;

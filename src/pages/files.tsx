@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { Button, Progress } from "antd";
+import { Button, Progress, Spin } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { throttle } from "lodash-es";
 import { chunkFiles } from "@/utils/file";
@@ -9,7 +9,7 @@ const fileAccept = [".png", ".svg", ".jpg", ".jpeg", ".webp"];
 
 type State = {
   percent?: number;
-  uplpadState: "init" | "upload" | "success" | "fail";
+  state: "init" | "upload" | "success" | "fail";
   cancel?: () => void;
 };
 //
@@ -58,7 +58,7 @@ export default function FilesPage() {
           ? webkitRelativePath === chunk.name
           : chunk.name === file.name
       );
-      let uplpadState: State["uplpadState"] = "upload";
+      let state: State["state"] = "upload";
       let adapters: any[] = [];
       const percents: number[] = [];
       const cancel = () => adapters.map((adapter) => adapter?.cancel());
@@ -70,7 +70,7 @@ export default function FilesPage() {
         );
         setUploadState((preState) => ({
           ...preState,
-          [key]: { percent, uplpadState, cancel },
+          [key]: { percent, state, cancel },
         }));
       }, 50);
 
@@ -95,9 +95,9 @@ export default function FilesPage() {
             });
           })
         );
-        uplpadState = "success";
+        state = "success";
       } catch (error) {
-        uplpadState = "fail";
+        state = "fail";
       } finally {
         adapters = [];
         asyncState();
@@ -145,7 +145,8 @@ export default function FilesPage() {
       <div className="flex flex-col">
         {files.map((file, index) => {
           const fileName = file.webkitRelativePath || file.name;
-          const { percent, uplpadState, cancel } = uploadState[fileName] || {};
+          const { percent = 0, state, cancel } = uploadState[fileName] || {};
+          const isUpload = state === "upload";
           return (
             <div
               key={fileName}
@@ -153,11 +154,13 @@ export default function FilesPage() {
             >
               <div className="flex items-center">
                 <Progress
-                  percent={percent}
-                  className="w-[50%] mr-auto"
-                  status={uplpadState === "fail" ? "exception" : undefined}
+                  className="w-[50%]"
+                  status={state === "fail" ? "exception" : undefined}
+                  percent={isUpload ? Math.min(99.9, percent) : percent}
                 />
+                {isUpload && <Spin className="ml-[8px]" size="small" />}
                 <Button
+                  className="ml-auto"
                   icon={<DeleteOutlined />}
                   onClick={() => delImage(index, cancel)}
                 />
