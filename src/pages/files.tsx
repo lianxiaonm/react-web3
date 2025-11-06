@@ -1,12 +1,13 @@
-import { useCallback, useRef, useState } from "react";
-import { Button, Progress, Spin } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { Button, Progress, Image, Spin } from "antd";
+import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import { throttle } from "lodash-es";
 import { chunkFiles } from "@/utils/file";
 import { xhrRequest } from "@/utils/http";
 
 const fileAccept = [".png", ".svg", ".jpg", ".jpeg", ".webp"];
 
+type Preview = { visible: boolean; source?: string };
 type State = {
   percent?: number;
   state: "init" | "upload" | "success" | "fail";
@@ -16,6 +17,7 @@ type State = {
 export default function FilesPage() {
   const fileRef = useRef<any>(null);
   const [files, setFiles] = useState<File[]>([]);
+  const [preview, setPreview] = useState<Preview>({ visible: false });
   const [uploadState, setUploadState] = useState<Record<string, State>>({});
 
   const loadFile = useCallback(() => {
@@ -105,6 +107,26 @@ export default function FilesPage() {
     });
   }, [files]);
 
+  const viewImage = useMemo(() => {
+    const cache = new Map<string, string>();
+    return (img: File) => {
+      const key = img.webkitRelativePath || img.name;
+      const value = cache.get(key);
+      Promise.resolve(
+        value ||
+          new Promise<string>((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.onload = (evt: any) => resolve(evt.target.result);
+            fileReader.onerror = () => reject(new Error("file read error"));
+            fileReader.readAsDataURL(img);
+          })
+      ).then((result) => {
+        cache.set(key, result);
+        setPreview({ visible: true, source: result });
+      });
+    };
+  }, [files]);
+
   const delImage = useCallback((index: number, cancel: State["cancel"]) => {
     typeof cancel === "function" && cancel();
     setFiles((pres) => pres.filter((_, i) => index !== i));
@@ -142,6 +164,17 @@ export default function FilesPage() {
         disabled={!files.length}
         children={`upload files (${files.length}) (${transfer(allSize)})`}
       />
+      <Image
+        src=""
+        className="hidden"
+        preview={{
+          src: preview.source,
+          visible: preview.visible,
+          onVisibleChange: (value) => {
+            setPreview((pre) => ({ ...pre, visible: value }));
+          },
+        }}
+      />
       <div className="flex flex-col">
         {files.map((file, index) => {
           const fileName = file.webkitRelativePath || file.name;
@@ -160,7 +193,11 @@ export default function FilesPage() {
                 />
                 {isUpload && <Spin className="ml-[8px]" size="small" />}
                 <Button
-                  className="ml-auto"
+                  className="m-auto mr-2"
+                  icon={<EyeOutlined />}
+                  onClick={() => viewImage(file)}
+                />
+                <Button
                   icon={<DeleteOutlined />}
                   onClick={() => delImage(index, cancel)}
                 />

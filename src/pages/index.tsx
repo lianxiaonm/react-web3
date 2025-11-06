@@ -1,9 +1,9 @@
 import { Link } from "umi";
 
 const links = [
+  { name: "File", url: "/file" },
   { name: "Http", url: "/http" },
   { name: "Web3", url: "/web3" },
-  { name: "File", url: "/file" },
 ];
 
 export default function HomePage() {

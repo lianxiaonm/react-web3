@@ -23,6 +23,9 @@ export default defineConfig({
     strategy: "normal",
     exclude: [/spark\-md5/],
   },
+  jsMinifierOptions: {
+    target: ["chrome80", "es2020"],
+  },
   npmClient: "pnpm",
   tailwindcss: {},
   plugins: ["@umijs/plugins/dist/tailwindcss"],
