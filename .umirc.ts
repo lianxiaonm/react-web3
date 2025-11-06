@@ -26,7 +26,10 @@ export default defineConfig({
     strategy: "normal",
     exclude: [/spark\-md5/],
   },
-  jsMinifier: env === "production" ? "terser" : "esbuild",
+  jsMinifierOptions: {
+    target: ["chrome80", "es2020"],
+    drop: ["console", "debugger"],
+  },
   npmClient: "pnpm",
   tailwindcss: {},
   plugins: ["@umijs/plugins/dist/tailwindcss"],
