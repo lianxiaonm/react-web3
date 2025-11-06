@@ -1,5 +1,8 @@
 import { defineConfig } from "umi";
 
+const env = process.env.NODE_ENV || "development";
+console.log("env", env);
+
 export default defineConfig({
   routes: [
     { path: "/", component: "index" },
@@ -23,9 +26,7 @@ export default defineConfig({
     strategy: "normal",
     exclude: [/spark\-md5/],
   },
-  jsMinifierOptions: {
-    target: ["chrome80", "es2020"],
-  },
+  jsMinifier: env === "production" ? "terser" : "esbuild",
   npmClient: "pnpm",
   tailwindcss: {},
   plugins: ["@umijs/plugins/dist/tailwindcss"],
