@@ -1,5 +1,5 @@
 .section {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   max-width: 440px;
@@ -13,5 +13,18 @@
 
   &::-webkit-scrollbar {
     width: 0;
+  }
+}
+
+.with-markdown {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+
+  pre code {
+    display: flex;
+    width: 100%;
+    white-space: break-spaces;
   }
 }

@@ -9,23 +9,31 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@ai-sdk/deepseek": "^1.0.27",
     "@ant-design/icons": "~5.6.1",
     "@tanstack/react-query": "^5.90.2",
+    "ahooks": "^3.9.6",
+    "ai": "^5.0.89",
     "antd": "^5.27.6",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.18",
     "jotai": "^2.15.0",
     "lodash-es": "^4.17.21",
+    "mockjs": "^1.1.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "spark-md5": "^3.0.2",
+    "swr": "^2.3.6",
     "umi": "^4.5.0",
     "viem": "2.x",
     "wagmi": "^2.17.4"
   },
   "devDependencies": {
-    "@types/spark-md5": "^3.0.5",
     "@types/lodash-es": "^4.17.12",
+    "@types/mockjs": "^1.0.10",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
+    "@types/spark-md5": "^3.0.5",
     "@umijs/plugins": "^4.5.3",
     "tailwindcss": "^3",
     "typescript": "^5.0.3"

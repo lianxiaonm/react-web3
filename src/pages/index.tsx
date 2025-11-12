@@ -4,6 +4,7 @@ const links = [
   { name: "File", url: "/file" },
   { name: "Http", url: "/http" },
   { name: "Web3", url: "/web3" },
+  { name: "Code", url: "/code" },
 ];
 
 export default function HomePage() {
