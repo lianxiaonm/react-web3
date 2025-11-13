@@ -1,11 +1,9 @@
-import { Fragment, useMemo, useRef, useState } from "react";
-import { throttle } from "lodash-es";
+import { Fragment, useState } from "react";
 import Search from "@/components/Search";
 import Segmented from "@/components/Segmented";
 import XScroll from "@/components/XScroll";
 
 export default function Market() {
-  const barRef = useRef<any>(null);
   const memeList = "1".repeat(10).split("");
   const [tab, setTab] = useState("hot");
 
@@ -14,31 +12,11 @@ export default function Market() {
     { label: "热门", key: "hot" },
     { label: "最新", key: "new" },
   ];
-
-  const scrollX = useMemo(() => {
-    return throttle((event) => {
-      const { target } = event;
-      const { current } = barRef;
-      if (current instanceof HTMLElement) {
-        const { scrollLeft, scrollWidth } = target;
-        const { width } = target.getBoundingClientRect();
-        const scrollPencent = Math.ceil(
-          (scrollLeft * 100) / (scrollWidth - width)
-        );
-        const [inner] = current.children;
-        const { width: barWidth } = current.getBoundingClientRect();
-        const { width: innerWidth } = inner.getBoundingClientRect();
-        const x = ((barWidth - innerWidth) * scrollPencent) / 100;
-        inner.setAttribute("style", `transform: translate(${x}px, 0px)`);
-      }
-    }, 100 / 3);
-  }, []);
-
   return (
     <Fragment>
       <Search placeholder="代币名称或合约地址" />
       <XScroll>
-        {memeList.map((meme, index) => (
+        {memeList.map((_, index) => (
           <div
             key={index}
             className="border rounded-xl p-[6px] w-[80px] h-[80px] flex-none"

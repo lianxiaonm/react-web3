@@ -18,6 +18,14 @@ export default defineConfig({
         { path: "/web3/assets", component: "web3/assets" }, //
       ],
     },
+    {
+      path: "/code",
+      component: "@/layouts/code",
+      routes: [
+        { path: "", component: "code" }, //
+        { path: "/code/run", component: "code/run" }, //
+      ],
+    },
     { path: "/file", component: "files" },
     { path: "/*", component: "404" },
   ],
