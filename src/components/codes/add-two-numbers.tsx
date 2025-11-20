@@ -1,5 +1,5 @@
-import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
+import { Button, Input } from "antd";
 
 export const question = `
     题目: 给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，并且每个节点只能存储 一位 数字。
@@ -17,7 +17,7 @@ type INode = { val: number; next: INode } | null;
 
 const arrToINode = (arr: number[]): INode => {
   return arr.reduceRight((res, val) => {
-    return res ? { val, next: res } : { val, next: null };
+    return { val, next: res };
   }, null as INode);
 };
 const iNodeToArr = (node: INode): number[] => {
@@ -73,16 +73,16 @@ const addTwoNumbers1 = function (l1: INode, l2: INode) {
 export const Demo = () => {
   const [arr1, setArr1] = useState([2, 4, 3]);
   const [arr2, setArr2] = useState([5, 6, 4]);
-  const [output, setOutput] = useState<number[] | null>(null);
+  const [output, setOutput] = useState<string>("");
 
-  useEffect(() => setOutput(null), [arr1, arr2]);
+  useEffect(() => setOutput(""), [arr1, arr2]);
 
   function execute() {
     const node1 = arrToINode(arr1);
     const node2 = arrToINode(arr2);
     const node3 = addTwoNumbers(node1, node2);
     console.log("output:", node3);
-    setOutput(iNodeToArr(node3));
+    setOutput(JSON.stringify(iNodeToArr(node3)));
   }
 
   return (
@@ -99,7 +99,10 @@ export const Demo = () => {
         />
         <Button onClick={execute} className="h-[40px]" children="执行" />
       </div>
-      <div className="">{`结果： ${JSON.stringify(output)}`}</div>
+      <div className="flex">
+        <div className="flex-none" children="结果:" />
+        <div className="ml-[8px]" children={output} />
+      </div>
     </div>
   );
 };

@@ -41,7 +41,10 @@ export const Demo = () => {
         />
         <Button onClick={execute} className="h-[40px]" children="执行" />
       </div>
-      <div className="">{`结果： ${output}`}</div>
+      <div className="flex">
+        <div className="flex-none" children="结果:" />
+        <div className="ml-[8px]" children={output} />
+      </div>
     </div>
   );
 };

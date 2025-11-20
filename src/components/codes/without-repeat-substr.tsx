@@ -1,5 +1,5 @@
-import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
+import { Button, Input } from "antd";
 
 export const question = `
     题目: 给定一个字符串 s ，请你找出其中不含有重复字符的 最长 子串 的长度。
@@ -55,7 +55,10 @@ export const Demo = () => {
         />
         <Button onClick={execute} className="h-[40px]" children="执行" />
       </div>
-      <div className="">{`结果： ${output}`}</div>
+      <div className="flex">
+        <div className="flex-none" children="结果:" />
+        <div className="ml-[8px]" children={output} />
+      </div>
     </div>
   );
 };

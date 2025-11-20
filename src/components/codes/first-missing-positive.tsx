@@ -2,37 +2,37 @@ import { useEffect, useState } from "react";
 import { Button, Input } from "antd";
 
 export const question = `
-    题目: 给你一个 32 位的有符号整数 x ，返回将 x 中的数字部分反转后的结果。如果反转后整数超过 32 位的有符号整数的范围 [−231,  231 − 1] ，就返回 0。
+    题目: 给你一个未排序的整数数组 nums ，请你找出其中没有出现的最小的正整数。
+    请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
 
     实例：
-    * x = 123 --> 321
-    * x = -123 --> -321
-    * x = 120 --> 21
+    * nums = [1,2,0] --> 3
+    * nums = [3,4,-1,1] --> 1
     
-    提示: -2^31 <= x <= 2^31 - 1
+    提示: 1 <= nums.length <= 105, -231 <= nums[i] <= 231 - 1
 `;
 
-const reverseInt = (x: number): number => {
-  let rev = 0;
-  while (x !== 0) {
-    const digit = x % 10;
-    x = ~~(x / 10);
-    rev = rev * 10 + digit;
-    if (rev < Math.pow(-2, 31) || rev > Math.pow(2, 31) - 1) {
-      return 0;
-    }
+const firstMissingPositive = (nums: number[]): number => {
+  const arr = new Array(nums.length);
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] > 0) arr[nums[i]] = nums[i];
   }
-  return rev;
+  let ans = 1;
+  for (; ans < arr.length; ans++) {
+    if (!arr[ans]) break;
+  }
+  return ans;
 };
 
 export const Demo = () => {
-  const [input, setInput] = useState("-120");
+  const [input, setInput] = useState("1,2,0");
   const [output, setOutput] = useState<string>("");
 
   useEffect(() => setOutput(""), [input]);
 
   function execute() {
-    const value = reverseInt(+input);
+    const nums = input.split(",").map((num) => +num);
+    const value = firstMissingPositive(nums);
     setOutput(`${value}`);
   }
 

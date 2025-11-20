@@ -1,5 +1,5 @@
-import { Button, Input } from "antd";
 import { useEffect, useState } from "react";
+import { Button, Input } from "antd";
 
 export const question = `
     题目: 请你来实现一个 myAtoi(string s) 函数，使其能将字符串转换成一个 32 位有符号整数。
@@ -54,7 +54,10 @@ export const Demo = () => {
         />
         <Button onClick={execute} className="h-[40px]" children="执行" />
       </div>
-      <div className="">{`结果： ${output}`}</div>
+      <div className="flex">
+        <div className="flex-none" children="结果:" />
+        <div className="ml-[8px]" children={output} />
+      </div>
     </div>
   );
 };

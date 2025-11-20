@@ -19,7 +19,7 @@ const Account = () => {
 
   const copyAddress = useCallback(() => {
     try {
-      navigator.clipboard.writeText(address);
+      navigator.clipboard.writeText(address || '');
       message.success("copy success");
     } catch (error: any) {
       message.error(`copy error: ${error.message}`);
@@ -42,7 +42,7 @@ const Account = () => {
             <div className="flex gap-2 items-end">
               <span className="font-bold">{connector?.name}</span>
               <span className="text-[14px]">
-                {address.replace(/^(.{4}).*(.{4})$/, "$1...$2")}
+                {address?.replace(/^(.{4}).*(.{4})$/, "$1...$2")}
               </span>
             </div>
             <div>

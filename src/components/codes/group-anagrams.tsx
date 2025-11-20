@@ -2,38 +2,35 @@ import { useEffect, useState } from "react";
 import { Button, Input } from "antd";
 
 export const question = `
-    题目: 给你一个 32 位的有符号整数 x ，返回将 x 中的数字部分反转后的结果。如果反转后整数超过 32 位的有符号整数的范围 [−231,  231 − 1] ，就返回 0。
+    题目: 给你一个字符串数组，请你将 字母异位词 组合在一起。可以按任意顺序返回结果列表。
 
     实例：
-    * x = 123 --> 321
-    * x = -123 --> -321
-    * x = 120 --> 21
+    * strs = ["eat", "tea", "tan", "ate"] --> [["tan"],["ate","eat","tea"]]
+    * strs = ["a"] --> [["a"]]
     
-    提示: -2^31 <= x <= 2^31 - 1
+    提示: 1 <= strs.length <= 104, 0 <= strs[i].length <= 100
 `;
 
-const reverseInt = (x: number): number => {
-  let rev = 0;
-  while (x !== 0) {
-    const digit = x % 10;
-    x = ~~(x / 10);
-    rev = rev * 10 + digit;
-    if (rev < Math.pow(-2, 31) || rev > Math.pow(2, 31) - 1) {
-      return 0;
-    }
+const groupAnagrams = (strs: string[]): string[][] => {
+  const map: Record<string, string[]> = {};
+  for (let char of strs) {
+    const key = char.split("").sort().join("");
+    if (map[key]) map[key].push(char);
+    else map[key] = [char];
   }
-  return rev;
+  return Object.values(map);
 };
 
 export const Demo = () => {
-  const [input, setInput] = useState("-120");
+  const [input, setInput] = useState("eat,tea,tan,ate");
   const [output, setOutput] = useState<string>("");
 
   useEffect(() => setOutput(""), [input]);
 
   function execute() {
-    const value = reverseInt(+input);
-    setOutput(`${value}`);
+    const strs = input.split(",");
+    const value = groupAnagrams(strs);
+    setOutput(`${JSON.stringify(value)}`);
   }
 
   return (
