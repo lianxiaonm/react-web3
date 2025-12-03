@@ -6,6 +6,7 @@ const links = [
   { name: "Web3", url: "/web3" },
   { name: "Code", url: "/code" },
   { name: "Canvas", url: "/canvas" },
+  { name: "Chart", url: "/chart" },
 ];
 
 export default function HomePage() {

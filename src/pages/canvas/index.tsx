@@ -15,7 +15,7 @@ req.keys().forEach((key: string) => {
   demos[componentName] = req(key);
 });
 
-export default function CodePage() {
+export default function ListPage() {
   const [_, setRun] = useRun();
   const click = useCallback((key: string) => {
     const { description, Canvas } = demos[key];
@@ -28,8 +28,8 @@ export default function CodePage() {
       {Object.keys(demos).map((key) => (
         <li
           key={key}
-          children={key}
           onClick={() => click(key)}
+          children={demos[key].title || key}
           className="px-[24px] py-[16px] cursor-pointer border-b last-of-type:border-none"
         />
       ))}

@@ -7,6 +7,7 @@ export default defineConfig({
   routes: [
     { path: "/", component: "index" },
     { path: "/http", component: "http" },
+    { path: "/file", component: "files" },
     {
       path: "/web3",
       component: "@/layouts/web3",
@@ -20,7 +21,7 @@ export default defineConfig({
     },
     {
       path: "/code",
-      component: "@/layouts/code",
+      component: "@/layouts/basic",
       routes: [
         { path: "", component: "code" }, //
         { path: "/code/run", component: "code/run" }, //
@@ -28,13 +29,20 @@ export default defineConfig({
     },
     {
       path: "/canvas",
-      component: "@/layouts/canvas",
+      component: "@/layouts/basic",
       routes: [
         { path: "", component: "canvas" }, //
         { path: "/canvas/run", component: "canvas/run" }, //
       ],
     },
-    { path: "/file", component: "files" },
+    {
+      path: "/chart",
+      component: "@/layouts/basic",
+      routes: [
+        { path: "", component: "chart" }, //
+        { path: "/chart/run", component: "chart/run" }, //
+      ],
+    },
     { path: "/*", component: "404" },
   ],
   mfsu: {
