@@ -50,6 +50,7 @@ export default defineConfig({
     strategy: "normal",
     exclude: [/spark\-md5/],
   },
+  esbuildMinifyIIFE: true,
   jsMinifierOptions: {
     target: ["chrome80", "es2020"],
     drop: ["console", "debugger"],
