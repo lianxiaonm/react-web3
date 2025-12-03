@@ -2,11 +2,11 @@ import { useLocation, Outlet, Link } from "umi";
 import cls from "classnames";
 
 const navigationLinks = [
-  { name: "列表", url: "/code" },
-  { name: "测试", url: "/code/run" },
+  { name: "列表", url: "/canvas" },
+  { name: "测试", url: "/canvas/run" },
 ];
 
-export default function CodeLayout() {
+export default function CanvasLayout() {
   const location = useLocation();
   const pathname = location.pathname.replace(/\/$/, "");
   return (

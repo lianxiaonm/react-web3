@@ -3,29 +3,29 @@ import { useCallback } from "react";
 import { useRun } from "./run";
 
 const req = (require as any).context(
-  "../../components/codes",
+  "../../components/canvas",
   false,
   /\.tsx$/i
 );
 
-const codes: Record<string, any> = {};
+const demos: Record<string, any> = {};
 req.keys().forEach((key: string) => {
   const componentName = key.replace("./", "").replace(".tsx", "");
   if (/\//.test(componentName)) return;
-  codes[componentName] = req(key);
+  demos[componentName] = req(key);
 });
 
 export default function CodePage() {
   const [_, setRun] = useRun();
   const click = useCallback((key: string) => {
-    const { question, Demo } = codes[key];
-    setRun({ question, Demo });
-    setTimeout(() => history.push("code/run"), 0);
+    const { description, Canvas } = demos[key];
+    setRun({ description, Canvas });
+    setTimeout(() => history.push("canvas/run"), 0);
   }, []);
 
   return (
     <ul className="h-full flex flex-col">
-      {Object.keys(codes).map((key) => (
+      {Object.keys(demos).map((key) => (
         <li
           key={key}
           children={key}

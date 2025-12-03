@@ -5,6 +5,7 @@ const links = [
   { name: "Http", url: "/http" },
   { name: "Web3", url: "/web3" },
   { name: "Code", url: "/code" },
+  { name: "Canvas", url: "/canvas" },
 ];
 
 export default function HomePage() {

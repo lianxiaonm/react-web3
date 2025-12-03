@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { atom, useAtom } from "jotai";
 import Markdown from "react-markdown";
 
-const codeAtom = atom({
+const runAtom = atom({
   question: `
     题目: xxxx
     
@@ -16,10 +16,10 @@ const codeAtom = atom({
   Demo: Fragment,
 });
 
-export const useCode = () => useAtom(codeAtom);
+export const useRun = () => useAtom(runAtom);
 
 export default function RunPage() {
-  const [{ question, Demo }] = useCode();
+  const [{ question, Demo }] = useRun();
   return (
     <div className="h-full">
       <div className="bg-gray-200 with-markdown">

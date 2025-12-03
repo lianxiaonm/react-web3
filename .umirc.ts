@@ -26,6 +26,14 @@ export default defineConfig({
         { path: "/code/run", component: "code/run" }, //
       ],
     },
+    {
+      path: "/canvas",
+      component: "@/layouts/canvas",
+      routes: [
+        { path: "", component: "canvas" }, //
+        { path: "/canvas/run", component: "canvas/run" }, //
+      ],
+    },
     { path: "/file", component: "files" },
     { path: "/*", component: "404" },
   ],
