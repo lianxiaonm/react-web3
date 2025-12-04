@@ -1,31 +1,23 @@
-import { Fragment } from "react";
 import { atom, useAtom } from "jotai";
 import Markdown from "react-markdown";
 
 const runAtom = atom({
-  question: `
-    题目: xxxx
-    
-    实例: input --> output
-    
-    要求：
-    1. 条件一
-    
-    提示：
+  description: `
+    功能: 
   `,
-  Demo: Fragment,
+  Chart: () => null,
 });
 
 export const useRun = () => useAtom(runAtom);
 
 export default function RunPage() {
-  const [{ question, Demo }] = useRun();
+  const [{ description, Chart }] = useRun();
   return (
     <div className="h-full">
       <div className="bg-gray-200 with-markdown">
-        <Markdown children={question} />
+        <Markdown children={description} />
       </div>
-      <Demo />
+      <Chart />
     </div>
   );
 }

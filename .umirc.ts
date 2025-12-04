@@ -7,6 +7,7 @@ export default defineConfig({
   routes: [
     { path: "/", component: "index" },
     { path: "/http", component: "http" },
+    { path: "/file", component: "files" },
     {
       path: "/web3",
       component: "@/layouts/web3",
@@ -20,13 +21,28 @@ export default defineConfig({
     },
     {
       path: "/code",
-      component: "@/layouts/code",
+      component: "@/layouts/basic",
       routes: [
         { path: "", component: "code" }, //
         { path: "/code/run", component: "code/run" }, //
       ],
     },
-    { path: "/file", component: "files" },
+    {
+      path: "/canvas",
+      component: "@/layouts/basic",
+      routes: [
+        { path: "", component: "canvas" }, //
+        { path: "/canvas/run", component: "canvas/run" }, //
+      ],
+    },
+    {
+      path: "/chart",
+      component: "@/layouts/basic",
+      routes: [
+        { path: "", component: "chart" }, //
+        { path: "/chart/run", component: "chart/run" }, //
+      ],
+    },
     { path: "/*", component: "404" },
   ],
   mfsu: {
@@ -34,6 +50,7 @@ export default defineConfig({
     strategy: "normal",
     exclude: [/spark\-md5/],
   },
+  esbuildMinifyIIFE: true,
   jsMinifierOptions: {
     target: ["chrome80", "es2020"],
     drop: ["console", "debugger"],
